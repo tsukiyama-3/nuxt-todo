@@ -12,6 +12,8 @@ const { data: serverDate } = await useAsyncData('date', async () => {
   await new Promise((resolve) => setTimeout(resolve, 1000))
   return date
 })
+
+const { getArticles } = useFirestore()
 </script>
 
 <template>
@@ -21,5 +23,6 @@ const { data: serverDate } = await useAsyncData('date', async () => {
     </h1>
     <p>Server Date: {{ serverDate }}</p>
     <p>Client Date: {{ clientDate }}</p>
+    <p @click="getArticles">getArticles</p>
   </div>
 </template>
