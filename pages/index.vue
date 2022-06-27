@@ -13,7 +13,7 @@ const { data: serverDate } = await useAsyncData('date', async () => {
   return date
 })
 
-const { getArticles } = useFirestore()
+const { getArticles, addItem, title, status } = useFirestore()
 </script>
 
 <template>
@@ -24,5 +24,12 @@ const { getArticles } = useFirestore()
     <p>Server Date: {{ serverDate }}</p>
     <p>Client Date: {{ clientDate }}</p>
     <p @click="getArticles">getArticles</p>
+    <form>
+      <input type="text" id="title" v-model="title" required>
+      <label for="title">title</label>
+      <input type="text" id="status" v-model="status" required>
+      <label for="status">status</label>
+      <button @click="addItem">add</button>
+    </form>
   </div>
 </template>

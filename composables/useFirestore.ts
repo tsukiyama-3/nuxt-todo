@@ -3,7 +3,8 @@ import {
   collection,
   query,
   where,
-  getDocs
+  getDocs,
+  addDoc
 } from 'firebase/firestore'
 
 import firebaseInit from './firebaseInit'
@@ -21,8 +22,20 @@ export const useFirestore = () => {
       console.log(doc.data())
     })
   }
+
+  const title = ref("")
+  const status = ref("")
+  const addItem = () => {
+    addDoc(collection(db, 'items'), {
+      title: title.value,
+      status: status.value
+    })
+  }
   return {
-    getArticles
+    getArticles,
+    addItem,
+    title,
+    status
   }
 }
 
