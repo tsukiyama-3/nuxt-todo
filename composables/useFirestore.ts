@@ -9,37 +9,36 @@ import {
 
 import firebaseInit from './firebaseInit'
 
-export const useFirestore = () => {
-  const db = getFirestore(firebaseInit)
-
-  const getArticles = async () => {
-    const q = query(
-      collection(db, 'articles')
-    )
-    const querySnapshot = await getDocs(q)
-
-    querySnapshot.forEach((doc) => {
-      console.log(doc.data())
-    })
-  }
-
-  const title = ref("")
-  const status = ref("")
-  const addItem = () => {
-    addDoc(collection(db, 'items'), {
-      title: title.value,
-      status: status.value
-    })
-  }
-  return {
-    getArticles,
-    addItem,
-    title,
-    status
-  }
+export type Task = {
+  title: string
+  status: boolean
 }
+const db = getFirestore(firebaseInit)
 
+export const useTasks = () => {
+  const db = getFirestore(firebaseInit)
+  const tasks = ref<Task[]>([])
+  onBeforeMount(async () => {
+    const snapshot = await getDocs(collection(db, 'tasks'))
+    tasks.value = Array.from(new Set(
+      snapshot.docs.map((snapshot) => {
+        return {
+          title: snapshot.get('title'),
+          status: snapshot.get('status')
+        }
+      })
+    ))
+  })
 
-
-
-
+  const task = ref<Task>({
+    title: "",
+    status: false
+  })
+  const addTask = () => {
+    addDoc(collection(db, 'tasks'), {
+      title: task.value?.title,
+      status: task.value?.status
+    })
+  }
+  return { tasks, task, addTask }
+}
